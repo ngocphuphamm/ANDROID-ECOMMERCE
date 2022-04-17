@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="img_topDish" type="id" />
+    <item name="txt_foodapp" type="id" />
+    <item name="txt_ins" type="id" />
+    <item name="edt_email" type="id" />
+    <item name="edt_password" type="id" />
+    <item name="img_email" type="id" />
+    <item name="img_lock" type="id" />
+    <item name="txt_forgot" type="id" />
+</resources>

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "613212628475",
+    "project_id": "pnp-thltddnc-b20ce",
+    "storage_bucket": "pnp-thltddnc-b20ce.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:613212628475:android:6a1c702908c773bd48175e",
+        "android_client_info": {
+          "package_name": "com.example.a19dh1100266_phamngocphu"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "613212628475-1lu5jc32h9k2326imfkvqgu7150sqcnc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB57AwHV0C2vJi3tIDUJwS1SbKzYrCxT-I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "613212628475-1lu5jc32h9k2326imfkvqgu7150sqcnc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
