@@ -1,21 +1,31 @@
 package com.example.a19dh1100266_phamngocphu.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.example.a19dh1100266_phamngocphu.R;
+import com.example.a19dh1100266_phamngocphu.SignInActivity;
+import com.google.firebase.auth.FirebaseAuth;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link LogoutFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class LogoutFragment extends Fragment {
+public class LogoutFragment extends DialogFragment {
+
+    FirebaseAuth fAuth;
+    Button btn_signOut;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -62,5 +72,23 @@ public class LogoutFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_logout, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        fAuth = FirebaseAuth.getInstance();
+        btn_signOut = view.findViewById(R.id.btn_logOut);
+        btn_signOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fAuth.signOut();
+                Intent intent = new Intent(getContext(), SignInActivity.class);
+                startActivity(intent);
+                getActivity().finish();
+            }
+        });
+
     }
 }
