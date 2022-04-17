@@ -5,9 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +25,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,7 +34,6 @@ import java.util.Map;
  * A simple {@link Fragment} subclass.
  * Use the {@link UsernamePasswordFragment#newInstance} factory method to
  * create an instance of this fragment.
- *
  */
 public class UsernamePasswordFragment extends Fragment {
 
@@ -40,6 +42,7 @@ public class UsernamePasswordFragment extends Fragment {
     FirebaseAuth fAuth;
     FirebaseDatabase fDatabase;
     String userID;
+    NavController navController;
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -93,97 +96,74 @@ public class UsernamePasswordFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        navController = Navigation.findNavController(view);
         fAuth = FirebaseAuth.getInstance();
         fDatabase = FirebaseDatabase.getInstance();
-
         tvEmail = view.findViewById(R.id.tvEmail);
         tvPassword = view.findViewById(R.id.tvPassword);
         tvConfirmPassword = view.findViewById(R.id.tvConfirmPassword);
         btnRegister = view.findViewById(R.id.btnRegister);
         btnRegister.setOnClickListener(v -> {
-
             String address = getArguments().getString("address");
             String firstname = getArguments().getString("firstname");
             String lastname = getArguments().getString("lastname");
+            String mobile = getArguments().getString("mobile");
             double latitude = getArguments().getDouble("latitude");
             double longitude = getArguments().getDouble("longitude");
-            String mobile = getArguments().getString("mobile");
             String email = tvEmail.getText().toString();
             String password = tvPassword.getText().toString();
             String confirmPassword = tvConfirmPassword.getText().toString();
-            // nếu mà tên username rỗng
-            if(email.isEmpty())
-            {
-                Toast.makeText(getContext(), "email rong", Toast.LENGTH_SHORT).show();
-                return;
 
-            }
-            // nếu mà password để rỗng
-            if(password.isEmpty())
-            {
-                Toast.makeText(getContext(), "password rong", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            //  Kiểm	tra	password	là	số số nếu	sai	hiện	error
-            if(confirmPassword.isEmpty()) {
-                Toast.makeText(getContext(), "password xac nhan rong", Toast.LENGTH_SHORT).show();
-                return;
-            }
-             if(password.equals(confirmPassword))
-            {
-                fAuth.createUserWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if(task.isComplete()){
-                                    userID = fAuth.getCurrentUser().getUid();
-                                    DatabaseReference databaseReference = fDatabase.getReference();
+            if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password) && !TextUtils.isEmpty(confirmPassword)){
+                if(password.equals(confirmPassword)){
+                    fAuth.createUserWithEmailAndPassword(email, password)
+                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if(task.isSuccessful()){
+                                        userID = fAuth.getCurrentUser().getUid();
+                                        DatabaseReference databaseReference = fDatabase.getReference();
 
-                                    Map<String,Object> user = new HashMap<>();
-                                    user.put("firstname",firstname);
-                                    user.put("lastname",lastname);
-                                    user.put("address",address);
-                                    user.put("email",email);
-                                    user.put("mobile", mobile);
-                                     user.put("latitude", latitude);
-                                     user.put("longitude", longitude);
-                                    Intent intent = new Intent(getContext(), SignInActivity.class);
-                                    databaseReference.child("users").child(userID).setValue(user)
-                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                @Override
-                                                public void onSuccess(Void aVoid) {
-                                                    Toast.makeText(getContext(), "OKE", Toast.LENGTH_SHORT).show();
-                                                    Intent intent = new Intent(getContext(), SignInActivity.class);
-                                                }
-                                            })
-                                            .addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
-                                                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-
-                                                }
-                                            });
-                                    intent.putExtra("email", email);
-                                    getActivity().setResult(Activity.RESULT_OK, intent);
-                                    getActivity().finish();
-                                    startActivity(intent);
+                                        Map<String,Object> user = new HashMap<>();
+                                        user.put("firstname",firstname);
+                                        user.put("lastname",lastname);
+                                        user.put("address",address);
+                                        user.put("email",email);
+                                        user.put("latitude", latitude);
+                                        user.put("longitude", longitude);
+                                        user.put("mobile", mobile);
+                                        databaseReference.child("users").child(userID).setValue(user)
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        Toast.makeText(getContext(), "OKE", Toast.LENGTH_SHORT).show();
+                                                        Intent intent = new Intent(getContext(), SignInActivity.class);
+                                                        intent.putExtra("email", email);
+                                                        getActivity().setResult(Activity.RESULT_OK, intent);
+                                                        getActivity().finish();
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
+                                    }
                                 }
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }else {
+                    Toast.makeText(getContext(), "Vui lòng nhâp lại khóp mật khẩu", Toast.LENGTH_SHORT).show();
+                }
 
-                            }
-                        });
+            }else {
+                Toast.makeText(getContext(), "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
             }
-             else
-             {
-                 Toast.makeText(getContext(), "Password xac nhan ko dung", Toast.LENGTH_SHORT).show();
-                 return;
-             }
-
 
         });
     }

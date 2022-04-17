@@ -6,7 +6,7 @@ public class Food implements Serializable, Comparable<Food> {
     String name;
     String image;
     int price;
-    int rate;
+    public int rate;
     String resKey;
     String foodKey;
 

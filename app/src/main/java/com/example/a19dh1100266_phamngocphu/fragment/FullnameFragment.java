@@ -1,4 +1,4 @@
-package com.example.a19dh1100266_phamngocphu;
+package com.example.a19dh1100266_phamngocphu.fragment;
 
 import android.os.Bundle;
 
@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.a19dh1100266_phamngocphu.R;
 import com.google.android.material.textfield.TextInputEditText;
 
 /**

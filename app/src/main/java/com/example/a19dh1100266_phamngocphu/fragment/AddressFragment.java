@@ -1,7 +1,5 @@
-package com.example.a19dh1100266_phamngocphu;
+package com.example.a19dh1100266_phamngocphu.fragment;
 
-import android.content.Context;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,12 +8,14 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.a19dh1100266_phamngocphu.R;
 import com.example.a19dh1100266_phamngocphu.model.LocationServiceTask;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -27,9 +27,11 @@ import com.google.android.material.textfield.TextInputEditText;
  * create an instance of this fragment.
  */
 public class AddressFragment extends Fragment {
+
     TextInputEditText tvAddress, tvMobile;
     Button btnNext;
     NavController navController;
+
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -81,43 +83,27 @@ public class AddressFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         navController = Navigation.findNavController(view);
         tvAddress = view.findViewById(R.id.tvAddress);
         tvMobile = view.findViewById(R.id.tvMobile);
         btnNext = view.findViewById(R.id.btnNext);
-        // define data  and  to change data
         btnNext.setOnClickListener(v -> {
-            // nếu mà tên username rỗng
-            if(tvAddress.getText().toString().isEmpty())
-            {
-                Toast.makeText(getContext(), "address rong", Toast.LENGTH_SHORT).show();
-                return;
-
-            }
-            // nếu mà password để rỗng
-            if(tvMobile.getText().toString().isEmpty())
-            {
-                Toast.makeText(getContext(), "address rong", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            else
-            {//            LatLng latLng = LocationServiceTask.getLatLngFromAddress(getContext(), tvAddress.getText().toString());
+            if (!TextUtils.isEmpty(tvAddress.getText()) && !TextUtils.isEmpty(tvMobile.getText())){
+                LatLng latLng = LocationServiceTask.getLatLngFromAddress(getContext(), tvAddress.getText().toString());
                 Bundle bundle = new Bundle();
                 bundle.putString("address", tvAddress.getText().toString());
-//            bundle.putDouble("latitude", latLng.latitude);
-//            bundle.putDouble("longitude", latLng.longitude);
+                bundle.putDouble("latitude", latLng.latitude);
+                bundle.putDouble("longitude", latLng.longitude);
                 bundle.putString("mobile", tvMobile.getText().toString());
                 bundle.putString("firstname", getArguments().getString("firstname"));
                 bundle.putString("lastname", getArguments().getString("lastname"));
-
                 navController.navigate(R.id.action_addressFragment_to_usernamePasswordFragment, bundle);
+            }else{
+                Toast.makeText(getContext(), "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
             }
-
         });
     }
 
-//
 //    @Override
 //    public void onResume() {
 //        super.onResume();
@@ -129,7 +115,6 @@ public class AddressFragment extends Fragment {
 //        } else {
 //            LocationServiceTask.displayEnableLocationServiceDialog(getActivity());
 //        }
-//
 //    }
 //
 //    @Override
@@ -143,6 +128,5 @@ public class AddressFragment extends Fragment {
 //    public void getLastLocation(Context context) {
 //
 //    }
-
 }
 

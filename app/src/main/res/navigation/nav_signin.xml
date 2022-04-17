@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/fullnameFragment"
-        android:name="com.example.a19dh1100266_phamngocphu.FullnameFragment"
+        android:name="com.example.a19dh1100266_phamngocphu.fragment.FullnameFragment"
         android:label="fragment_fullname"
         tools:layout="@layout/fragment_fullname" >
         <action
@@ -16,7 +16,7 @@
     </fragment>
     <fragment
         android:id="@+id/addressFragment"
-        android:name="com.example.a19dh1100266_phamngocphu.AddressFragment"
+        android:name="com.example.a19dh1100266_phamngocphu.fragment.AddressFragment"
         android:label="fragment_address"
         tools:layout="@layout/fragment_address" >
         <action

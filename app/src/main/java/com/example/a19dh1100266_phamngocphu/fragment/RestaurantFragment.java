@@ -1,19 +1,43 @@
 package com.example.a19dh1100266_phamngocphu.fragment;
 
+
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.example.a19dh1100266_phamngocphu.R;
+import com.example.a19dh1100266_phamngocphu.adapter.RestaurantAdapter;
+import com.example.a19dh1100266_phamngocphu.model.Restaurant;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.annotations.Nullable;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link RestaurantFragment#newInstance} factory method to
  * create an instance of this fragment.
- *
  */
-public class RestaurantFragment extends Fragment {
+public class RestaurantFragment extends Fragment implements RestaurantAdapter.OnRestaurantItemClickListener {
+
+    RecyclerView rvRestaurants;
+    RestaurantAdapter restaurantAdapter;
+    ArrayList<Restaurant> restaurants;
+    FirebaseDatabase fDatabase;
+    DatabaseReference dRestaurant;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -23,6 +47,10 @@ public class RestaurantFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    public RestaurantFragment() {
+        // Required empty public constructor
+    }
 
     /**
      * Use this factory method to create a new instance of
@@ -42,10 +70,6 @@ public class RestaurantFragment extends Fragment {
         return fragment;
     }
 
-    public RestaurantFragment() {
-        // Required empty public constructor
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +77,8 @@ public class RestaurantFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        restaurants = new ArrayList<>();
     }
 
     @Override
@@ -60,5 +86,45 @@ public class RestaurantFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_restaurant, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        rvRestaurants = view.findViewById(R.id.rvRestaurants);
+        restaurantAdapter = new RestaurantAdapter(restaurants, this, 1);
+        rvRestaurants.setAdapter(restaurantAdapter);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        rvRestaurants.setLayoutManager(layoutManager);
+        rvRestaurants.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
+
+        fDatabase = FirebaseDatabase.getInstance();
+        dRestaurant = fDatabase.getReference();
+
+        Query qRestaurant = dRestaurant.child("restaurants");
+        qRestaurant.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                restaurants.clear();
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    Restaurant restaurant = dataSnapshot.getValue(Restaurant.class);
+
+                    restaurants.add(restaurant);
+                }
+                restaurantAdapter.notifyDataSetChanged();
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    @Override
+    public void onRestaurantItemClick(Restaurant restaurant) {
+
     }
 }

@@ -23,6 +23,7 @@ import java.util.List;
 
 public class RestaurantAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+
     public interface OnRestaurantItemClickListener {
         void onRestaurantItemClick(Restaurant restaurant);
     }

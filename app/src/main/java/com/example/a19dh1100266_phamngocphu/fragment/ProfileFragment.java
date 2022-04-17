@@ -1,21 +1,44 @@
 package com.example.a19dh1100266_phamngocphu.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.example.a19dh1100266_phamngocphu.ChangePasswordActivity;
 import com.example.a19dh1100266_phamngocphu.R;
+import com.example.a19dh1100266_phamngocphu.model.User;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ProfileFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class ProfileFragment extends Fragment {
+
+    ImageView ivImage;
+    EditText edtName, edtEmail, edtMobile, edtAddress;
+    Button btnUpdate, btnChangePassword;
+    DatabaseReference reference;
+    FirebaseUser firebaseUser;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -62,5 +85,72 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_profile, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        ivImage = view.findViewById(R.id.ivImage);
+
+        edtName = view.findViewById(R.id.edtName);
+        edtEmail = view.findViewById(R.id.edtEmail);
+        edtMobile = view.findViewById(R.id.edtMobile);
+        edtAddress = view.findViewById(R.id.edtAddress);
+
+        btnUpdate = view.findViewById(R.id.btnUpdate);
+        btnChangePassword = view.findViewById(R.id.btnChangePassword);
+
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        reference = FirebaseDatabase.getInstance().getReference("users").child(firebaseUser.getUid());
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                User user = snapshot.getValue(User.class);
+                edtName.setText(user.getFirstname() + " " + user.getLastname());
+                edtEmail.setText(user.getEmail());
+                edtMobile.setText(user.getMobile());
+                edtAddress.setText(user.getAddress());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        btnUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                update();
+            }
+        });
+
+        btnChangePassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), ChangePasswordActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+
+    public void update() {
+        String mobile, address;
+        mobile = edtMobile.getText().toString().trim();
+        address = edtAddress.getText().toString().trim();
+        List<String> name = Arrays.asList(edtName.getText().toString().trim().split(" "));
+        if (!TextUtils.isEmpty(mobile) && !TextUtils.isEmpty(address) && name.size() > 0) {
+            Map<String, Object> user = new HashMap<>();
+            user.put("firstname", name.get(0));
+            user.put("lastname", name.get(1));
+            user.put("mobile", mobile);
+            user.put("address", address);
+            reference.updateChildren(user);
+            Toast.makeText(getContext(), "Cập nhật thành công", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getContext(), "Điền đầy đủ thông tin", Toast.LENGTH_SHORT).show();
+        }
+
     }
 }
