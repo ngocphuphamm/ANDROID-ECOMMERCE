@@ -1,5 +1,7 @@
 package com.example.a19dh1100266_phamngocphu.fragment;
 
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.a19dh1100266_phamngocphu.PermissionTask;
 import com.example.a19dh1100266_phamngocphu.R;
 import com.example.a19dh1100266_phamngocphu.model.LocationServiceTask;
 
@@ -103,30 +106,30 @@ public class AddressFragment extends Fragment {
             }
         });
     }
+//
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (LocationServiceTask.isLocationServiceEnabled(getActivity())) {
+            if (PermissionTask.isLocationServiceAllowed(getActivity()))
+                getLastLocation(getActivity());
+            else
+                PermissionTask.requestLocationServicePermissions(getActivity());
+        } else {
+            LocationServiceTask.displayEnableLocationServiceDialog(getActivity());
+        }
+    }
 
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        if (LocationServiceTask.isLocationServiceEnabled(getActivity())) {
-//            if (PermissionTask.isLocationServiceAllowed(getActivity()))
-//                getLastLocation(getActivity());
-//            else
-//                PermissionTask.requestLocationServicePermissions(getActivity());
-//        } else {
-//            LocationServiceTask.displayEnableLocationServiceDialog(getActivity());
-//        }
-//    }
-//
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-//        if (requestCode == PermissionTask.LOCATION_SERVICE_REQUEST_CODE && grantResults.length == 2 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//            getLastLocation(getActivity());
-//        }
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//    }
-//
-//    public void getLastLocation(Context context) {
-//
-//    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == PermissionTask.LOCATION_SERVICE_REQUEST_CODE && grantResults.length == 2 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            getLastLocation(getActivity());
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    public void getLastLocation(Context context) {
+
+    }
 }
 
