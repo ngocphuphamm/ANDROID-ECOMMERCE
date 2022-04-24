@@ -1,6 +1,7 @@
 package com.example.a19dh1100266_phamngocphu.fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.a19dh1100266_phamngocphu.R;
+import com.example.a19dh1100266_phamngocphu.RestaurantDetailActivity;
 import com.example.a19dh1100266_phamngocphu.adapter.RestaurantAdapter;
 import com.example.a19dh1100266_phamngocphu.model.Restaurant;
 import com.google.firebase.database.DataSnapshot;
@@ -125,6 +127,10 @@ public class RestaurantFragment extends Fragment implements RestaurantAdapter.On
 
     @Override
     public void onRestaurantItemClick(Restaurant restaurant) {
-
+        Bundle bundle = new Bundle();
+        Intent intent = new Intent(getContext(),RestaurantDetailActivity.class);
+        bundle.putSerializable("restaurant",restaurant);
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 }

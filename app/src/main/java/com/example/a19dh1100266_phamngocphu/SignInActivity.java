@@ -84,16 +84,16 @@ public class SignInActivity extends AppCompatActivity {
             });
         }
     }
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        String email = edt_email.getText().toString();
-//        if (fAuth.getCurrentUser() != null && TextUtils.isEmpty(email)){
-//            Intent intent = new Intent(SignInActivity.this, MainActivity.class);
-//            startActivity(intent);
-//            finish();
-//        }
-//    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        String email = edt_email.getText().toString();
+        if (fAuth.getCurrentUser() != null && TextUtils.isEmpty(email)){
+            Intent intent = new Intent(SignInActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+    }
 
     @Override
     public void onBackPressed() {

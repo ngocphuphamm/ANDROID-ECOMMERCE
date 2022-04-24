@@ -1,5 +1,7 @@
 package com.example.a19dh1100266_phamngocphu.fragment;
 
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.a19dh1100266_phamngocphu.PermissionTask;
 import com.example.a19dh1100266_phamngocphu.R;
 import com.example.a19dh1100266_phamngocphu.model.LocationServiceTask;
 
@@ -92,8 +95,8 @@ public class AddressFragment extends Fragment {
                 LatLng latLng = LocationServiceTask.getLatLngFromAddress(getContext(), tvAddress.getText().toString());
                 Bundle bundle = new Bundle();
                 bundle.putString("address", tvAddress.getText().toString());
-                bundle.putDouble("latitude", latLng.latitude);
-                bundle.putDouble("longitude", latLng.longitude);
+//                bundle.putDouble("latitude", latLng.latitude);
+//                bundle.putDouble("longitude", latLng.longitude);
                 bundle.putString("mobile", tvMobile.getText().toString());
                 bundle.putString("firstname", getArguments().getString("firstname"));
                 bundle.putString("lastname", getArguments().getString("lastname"));
@@ -103,7 +106,6 @@ public class AddressFragment extends Fragment {
             }
         });
     }
-
 //    @Override
 //    public void onResume() {
 //        super.onResume();
@@ -128,5 +130,6 @@ public class AddressFragment extends Fragment {
 //    public void getLastLocation(Context context) {
 //
 //    }
+//
 }
 

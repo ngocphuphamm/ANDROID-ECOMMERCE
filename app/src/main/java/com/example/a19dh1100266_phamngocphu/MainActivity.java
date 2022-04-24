@@ -11,9 +11,11 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.a19dh1100266_phamngocphu.model.CartRepository;
 import com.example.a19dh1100266_phamngocphu.model.User;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,6 +37,15 @@ public class MainActivity extends AppCompatActivity {
     TextView tvName, tvEmail;
     FirebaseUser fUser;
     DatabaseReference reference;
+
+    TextView textCartItemCount;
+    int mCartItemCount = 0;
+
+    Menu mMenu;
+    boolean flag = true;
+    CartRepository cartRepository;
+    FirebaseDatabase fDatabase;
+    FirebaseAuth fAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
