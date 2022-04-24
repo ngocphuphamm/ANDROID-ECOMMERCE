@@ -35,7 +35,7 @@ import java.util.Map;
  * Use the {@link UsernamePasswordFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class UsernamePasswordFragment extends Fragment {
+public class   UsernamePasswordFragment extends Fragment {
 
     TextInputEditText tvEmail, tvPassword,tvConfirmPassword;
     Button btnRegister;
