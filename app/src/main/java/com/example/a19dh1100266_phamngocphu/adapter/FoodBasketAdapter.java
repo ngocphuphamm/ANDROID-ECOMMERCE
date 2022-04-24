@@ -39,7 +39,7 @@ public class FoodBasketAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             super(itemView);
             nameFood = itemView.findViewById(R.id.nameFood);
             qty = itemView.findViewById(R.id.qty);
-            priceFood = itemView.findViewById(R.id.priceFood);
+            priceFood = itemView.findViewById(R.id.price);
             intoMoney = itemView.findViewById(R.id.intoMoney);
         }
     }
