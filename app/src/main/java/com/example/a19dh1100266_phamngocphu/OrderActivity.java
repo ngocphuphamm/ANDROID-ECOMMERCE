@@ -130,7 +130,7 @@ public class OrderActivity extends AppCompatActivity implements OnMapReadyCallba
         tvTotal = findViewById(R.id.tvTotal);
         tvTotal.setText(basket.getTotalPrice()+"");
         rvFoods = findViewById(R.id.rvFoods);
-//        adapter = new FoodBasketAdapter(new ArrayList<>(basket.foods.values()));
+        adapter = new FoodBasketAdapter(new ArrayList<FoodBasket>(basket.foods.values()));
         rvFoods.setAdapter(adapter);
         rvFoods.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false));
 

@@ -106,7 +106,7 @@ public class AddressFragment extends Fragment {
             }
         });
     }
-<<<<<<< HEAD
+
 //    @Override
 //    public void onResume() {
 //        super.onResume();
@@ -132,32 +132,6 @@ public class AddressFragment extends Fragment {
 //
 //    }
 //
-=======
-//
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (LocationServiceTask.isLocationServiceEnabled(getActivity())) {
-            if (PermissionTask.isLocationServiceAllowed(getActivity()))
-                getLastLocation(getActivity());
-            else
-                PermissionTask.requestLocationServicePermissions(getActivity());
-        } else {
-            LocationServiceTask.displayEnableLocationServiceDialog(getActivity());
-        }
-    }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == PermissionTask.LOCATION_SERVICE_REQUEST_CODE && grantResults.length == 2 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            getLastLocation(getActivity());
-        }
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
-
-    public void getLastLocation(Context context) {
-
-    }
->>>>>>> cc6e67cfa8c38251f4db6dd0e8c3743be747942f
 }
 

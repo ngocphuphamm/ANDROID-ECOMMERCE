@@ -76,4 +76,7 @@ public class FoodBasket extends Food{
                 '}';
     }
 
+    public int quantity() {
+        return this.quantity;
+    }
 }

@@ -16,7 +16,7 @@ import java.util.concurrent.Executors;
 
 @Database( entities = {Cart.class}, version = 1)
 public abstract class AppDatabase extends RoomDatabase {
-//    public static  AbstractExecutorService databaseWriteExecutor;
+    //    public static  AbstractExecutorService databaseWriteExecutor;
     private static AppDatabase INSTANCE;
     public abstract CartDao cartDao();
 
@@ -34,6 +34,7 @@ public abstract class AppDatabase extends RoomDatabase {
         INSTANCE = null;
     }
 }
+
 
 
 

@@ -32,22 +32,19 @@ public class FoodBasketAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         this.baskets = baskets;
     }
     public class ViewHolderFoodBasket extends RecyclerView.ViewHolder {
-        TextView tvName, tvAddress, tvOpenHour, tvID, tvDate, tvUserName;
+        TextView nameFood,qty,priceFood,intoMoney;
         ImageView ivImage;
 
         public ViewHolderFoodBasket(View itemView) {
             super(itemView);
-            tvName = itemView.findViewById(R.id.tvName);
-            ivImage = itemView.findViewById(R.id.ivImage);
-            tvAddress = itemView.findViewById(R.id.tvAddress);
-            tvOpenHour = itemView.findViewById(R.id.tvOpenHour);
-            tvID = itemView.findViewById(R.id.tvID);
-            tvDate = itemView.findViewById(R.id.tvDate);
-            tvUserName = itemView.findViewById(R.id.tvUserName);
+            nameFood = itemView.findViewById(R.id.nameFood);
+            qty = itemView.findViewById(R.id.qty);
+            priceFood = itemView.findViewById(R.id.priceFood);
+            intoMoney = itemView.findViewById(R.id.intoMoney);
         }
     }
 
-    private List<FoodBasket> foodBaskets;
+//    private ArrayList<FoodBasket> foodBaskets;
     private OnFoodBasketItemClickListener onFoodBasketItemClickListener;
 
     @NonNull
@@ -55,37 +52,30 @@ public class FoodBasketAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.row_food_basket, parent, false);
+        View view = inflater.inflate(R.layout.row_basket_food, parent, false);
         return new ViewHolderFoodBasket(view);
 
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        FoodBasket foodBasket = foodBaskets.get(position);
-        StorageReference storageReference = FirebaseStorage.getInstance().getReference();
-
+        FoodBasket foodBasket = baskets.get(position);
         FoodBasketAdapter.ViewHolderFoodBasket viewHolderFoodBasket = (FoodBasketAdapter.ViewHolderFoodBasket) holder;
-        StorageReference profileRef = storageReference.child("foodBaskets/"+ foodBasket.getImage());
-        profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                Picasso.get().load(uri).into(viewHolderFoodBasket.ivImage);
-            }
-        });
+        viewHolderFoodBasket.nameFood.setText(foodBasket.getFood() + "");
+        viewHolderFoodBasket.priceFood.setText(foodBasket.getPrice()+"");
+        viewHolderFoodBasket.qty.setText(foodBasket.getQuantity()+"");
 
+        int qty = foodBasket.getQuantity();
+        int price = foodBasket.getPrice();
+        int priceFood = qty * price;
+        viewHolderFoodBasket.intoMoney.setText(priceFood + " ");
+        System.out.println(priceFood);
 
-        viewHolderFoodBasket.tvName.setText(foodBasket.getName());
-        viewHolderFoodBasket.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onFoodBasketItemClickListener.onFoodBasketItemListener(foodBasket);
-            }
-        });
+//        viewHolderFoodBasket.intoMoney.setText(priceFood);
     }
 
     @Override
     public int getItemCount() {
-        return foodBaskets.size();
+        return baskets.size();
     }
 }
