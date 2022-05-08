@@ -1,29 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.a19dh1100266_phamngocphu">
+    package="com.example.a19dh1100266_phamngocphu" >
 
+<!--    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />-->
+<!--    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />-->
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+
 
     <application
-        android:name="com.example.a19dh1100266_phamngocphu.App"
+        android:name=".App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.19DH1100266_PHAMNGOCPHU">
+        android:theme="@style/Theme.19DH1100266_PHAMNGOCPHU" >
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyA8jl_7mtWLmU0XMenSsyo8UU1dP07sVNs"/>
         <activity
             android:name=".OrderActivity"
             android:exported="true" />
         <activity
             android:name=".RestaurantDetailActivity"
-            android:exported="true" />
+            android:exported="false" />
         <activity
             android:name=".ChangePasswordActivity"
             android:exported="true" />
-        <activity android:name=".SplashActivity">
+        <activity
+            android:name=".SplashActivity"
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

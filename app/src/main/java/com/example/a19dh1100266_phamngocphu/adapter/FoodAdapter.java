@@ -67,7 +67,8 @@ public class FoodAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 Picasso.get().load(uri).into(viewHolderFood.ivImage);
             }
         });
-        viewHolderFood.tvName.setText(food.getName());
+
+        viewHolderFood.tvName.setText(food.getName()+"");
         viewHolderFood.tvRate.setText("Rate: ".concat(String.valueOf(food.rate)));
         viewHolderFood.tvPrice.setText(food.getPrice()+"");
         viewHolderFood.itemView.setOnClickListener(new View.OnClickListener() {

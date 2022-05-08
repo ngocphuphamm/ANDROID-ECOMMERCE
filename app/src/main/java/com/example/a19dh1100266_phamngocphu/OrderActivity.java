@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
@@ -58,6 +59,10 @@ public class OrderActivity extends AppCompatActivity implements OnMapReadyCallba
         setContentView(R.layout.activity_order);
 
 
+        SupportMapFragment mapFragment
+                = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.frgMaps);
+        mapFragment.getMapAsync(this);
+
         tvAddress = findViewById(R.id.tvAddress);
         tvName = findViewById(R.id.tvName);
 
@@ -71,13 +76,16 @@ public class OrderActivity extends AppCompatActivity implements OnMapReadyCallba
                     @Override
                     public void onSuccess(DataSnapshot dataSnapshot) {
                         User user = dataSnapshot.getValue(User.class);
-                        LatLng latLngUser = new LatLng(user.getLattitude(), user.getLongitude());
+                        LatLng latLngUser = new LatLng(user.getLatitude(), user.getLongitude());
                         MarkerOptions options = new MarkerOptions().position(latLngUser);
                         options.icon(BitmapDescriptorFactory.fromBitmap(
                                 BitmapFactory.decodeResource(getResources(), R.drawable.ic_marker)));
 
                         map.addMarker(options);
                         map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLngUser, 16));
+
+
+
                         tvName.setText("Name: " + user.getFirstname() + " " + user.getLastname());
                         tvAddress.setText("Address: " + user.getEmail());
 
@@ -90,9 +98,6 @@ public class OrderActivity extends AppCompatActivity implements OnMapReadyCallba
                     }
                 });
 
-//        SupportMapFragment mapFragment
-//                = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.frgMaps);
-//        mapFragment.getMapAsync(this);
 
         cartRepository = new CartRepository(getApplication());
 
@@ -130,7 +135,7 @@ public class OrderActivity extends AppCompatActivity implements OnMapReadyCallba
         tvTotal = findViewById(R.id.tvTotal);
         tvTotal.setText(basket.getTotalPrice()+"");
         rvFoods = findViewById(R.id.rvFoods);
-        adapter = new FoodBasketAdapter(new ArrayList<FoodBasket>(basket.foods.values()));
+        adapter = new FoodBasketAdapter(new ArrayList<>(basket.foods.values()));
         rvFoods.setAdapter(adapter);
         rvFoods.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false));
 
@@ -175,4 +180,3 @@ public class OrderActivity extends AppCompatActivity implements OnMapReadyCallba
         }
     }
 }
-

@@ -61,7 +61,9 @@ public class FoodBasketAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         FoodBasket foodBasket = baskets.get(position);
         FoodBasketAdapter.ViewHolderFoodBasket viewHolderFoodBasket = (FoodBasketAdapter.ViewHolderFoodBasket) holder;
-        viewHolderFoodBasket.nameFood.setText(foodBasket.getFood() + "");
+        System.out.println("foodname");
+        System.out.println(foodBasket.getName());
+        viewHolderFoodBasket.nameFood.setText(foodBasket.getName()+"");
         viewHolderFoodBasket.priceFood.setText(foodBasket.getPrice()+"");
         viewHolderFoodBasket.qty.setText(foodBasket.getQuantity()+"");
 

@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class User implements Serializable {
     String firstname, lastname, email, address, mobile;
-    double lattitude, longitude;
+    double latitude, longitude;
 
     public User(){
 
@@ -15,7 +15,7 @@ public class User implements Serializable {
         this.lastname = lastname;
         this.email = email;
         this.address = address;
-        this.lattitude = lattitude;
+        this.latitude = lattitude;
         this.longitude = longitude;
         this.mobile = mobile;
     }
@@ -52,12 +52,12 @@ public class User implements Serializable {
         this.lastname = lastname;
     }
 
-    public double getLattitude() {
-        return lattitude;
+    public double getLatitude() {
+        return latitude;
     }
 
-    public void setLattitude(double lattitude) {
-        this.lattitude = lattitude;
+    public void setLatitude(double lattitude) {
+        this.latitude = lattitude;
     }
 
     public double getLongitude() {

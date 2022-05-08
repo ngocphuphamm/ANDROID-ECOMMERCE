@@ -1,5 +1,6 @@
 package com.example.a19dh1100266_phamngocphu;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,15 +10,12 @@ import android.location.LocationManager;
 import android.provider.Settings;
 import android.util.Log;
 
-import androidx.appcompat.app.AlertDialog;
-
 import com.google.android.gms.maps.model.LatLng;
 
 import java.io.IOException;
 import java.util.List;
 
 public class LocationServiceTask {
-
     public static boolean isLocationServiceEnabled(Context context) {
         boolean isGPSEnabled;
         boolean isNetworkEnabled;
