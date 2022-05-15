@@ -18,8 +18,10 @@ import android.view.ViewGroup;
 
 import com.example.a19dh1100266_phamngocphu.R;
 import com.example.a19dh1100266_phamngocphu.adapter.OrderAdapter;
+
 import com.example.a19dh1100266_phamngocphu.model.OrderFinished;
 import com.example.a19dh1100266_phamngocphu.model.Restaurant;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -28,12 +30,42 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class OrderFragment extends Fragment implements OrderAdapter.OnOrderItemListener {
+import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+
+
+/**
+ * A simple {@link Fragment} subclass.
+ * Use the {@link OrderFragment#newInstance} factory method to
+ * create an instance of this fragment.
+ */
+public class OrderFragment extends Fragment implements OrderAdapter.OnOrderItemListener {
     ArrayList<Restaurant> restaurants;
     FirebaseDatabase fDatabase;
     OrderAdapter orderAdapter;
-    ArrayList<OrderFinished> orderFinisheds;
+    ArrayList<OrderFinished> orderList;
     RecyclerView rvOrderFinished;
     DatabaseReference reference;
     // TODO: Rename parameter arguments, choose names that match
@@ -74,22 +106,8 @@ public class OrderFragment extends Fragment implements OrderAdapter.OnOrderItemL
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        orderList = new ArrayList<>();
         restaurants = new ArrayList<>();
-        orderFinisheds = new ArrayList<>();
-        setHasOptionsMenu(true);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_order, container, false);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        getActivity().getMenuInflater().inflate(R.menu.cart_menu, menu);
     }
 
     @Override
@@ -99,20 +117,19 @@ public class OrderFragment extends Fragment implements OrderAdapter.OnOrderItemL
         reference = fDatabase.getReference();
 
         rvOrderFinished = view.findViewById(R.id.rvOrderFinished);
-        orderAdapter = new OrderAdapter(orderFinisheds, restaurants, this);
+        orderAdapter = new OrderAdapter(orderList,restaurants,this);
         rvOrderFinished.setAdapter(orderAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         rvOrderFinished.setLayoutManager(layoutManager);
         rvOrderFinished.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
 
-        reference.child("orders").addValueEventListener(new ValueEventListener() {
+        reference.child("orders").child(FirebaseAuth.getInstance().getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                orderFinisheds.clear();
+                orderList.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     OrderFinished orderFinished = dataSnapshot.getValue(OrderFinished.class);
-                    orderFinisheds.add(orderFinished);
-                    Log.i("ABC", "onDataChange: " + orderFinisheds.get(0).getFoodBaskets().size());
+                    orderList.add(orderFinished);
                 }
                 orderAdapter.notifyDataSetChanged();
             }
@@ -129,7 +146,6 @@ public class OrderFragment extends Fragment implements OrderAdapter.OnOrderItemL
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Restaurant restaurant = dataSnapshot.getValue(Restaurant.class);
                     restaurants.add(restaurant);
-
                 }
                 orderAdapter.notifyDataSetChanged();
             }
@@ -141,6 +157,12 @@ public class OrderFragment extends Fragment implements OrderAdapter.OnOrderItemL
         });
 
 
+    }
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_order, container, false);
     }
 
     @Override

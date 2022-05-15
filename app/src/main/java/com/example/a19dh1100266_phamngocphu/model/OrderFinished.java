@@ -1,5 +1,6 @@
 package com.example.a19dh1100266_phamngocphu.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class OrderFinished {

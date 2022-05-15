@@ -26,12 +26,87 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    public interface OnOrderItemListener{
+    private ArrayList<Restaurant> restaurants;
+    private ArrayList<OrderFinished> orderFinisheds;
+    private OnOrderItemListener onOrderItemListener;
+
+
+    public interface OnOrderItemListener {
         void onOrderItemListener(OrderFinished orderFinished);
+    }
+
+    public OrderAdapter(ArrayList<OrderFinished> orderFinisheds, ArrayList<Restaurant> restaurants, OnOrderItemListener onOrderItemListener) {
+        this.orderFinisheds = orderFinisheds;
+        this.restaurants = restaurants;
+        this.onOrderItemListener = onOrderItemListener;
+    }
+
+    public OrderAdapter(ArrayList<OrderFinished> orderFinisheds, OnOrderItemListener onOrderItemListener) {
+        this.orderFinisheds = orderFinisheds;
+        this.onOrderItemListener = onOrderItemListener;
+    }
+
+    @NonNull
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        Context context = parent.getContext();
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View view = inflater.inflate(R.layout.row_order_finished, parent, false);
+        return new OrderAdapter.ViewHolderOrder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        OrderFinished orderFinished = orderFinisheds.get(position);
+        ViewHolderOrder viewHolderOrder = (ViewHolderOrder) holder;
+
+        Restaurant restaurant = new Restaurant();
+        for (Restaurant restaurant1 : restaurants) {
+            if (orderFinished.getFoodBaskets().get(0).getResKey().equals(restaurant1.getResKey())) {
+                restaurant = restaurant1;
+                break;
+            }
+        }
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+        StorageReference profileRef = storageReference.child("restaurants/" + restaurant.getLogo());
+        profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Picasso.get().load(uri).into(viewHolderOrder.ivImage);
+            }
+        });
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+        reference.child("users").child(FirebaseAuth.getInstance().getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                User user = snapshot.getValue(User.class);
+                viewHolderOrder.tvUserName.setText(user.getFirstname() + " " + user.getLastname());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        viewHolderOrder.tvName.setText(restaurant.getName());
+        viewHolderOrder.tvAddress.setText(restaurant.getAddress());
+        viewHolderOrder.tvID.setText(orderFinished.getOrderID());
+        viewHolderOrder.tvDate.setText(orderFinished.getOrderDate());
+        viewHolderOrder.tvSum.setText(orderFinished.getOrderSum());
+
+        viewHolderOrder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onOrderItemListener.onOrderItemListener(orderFinished);
+            }
+        });
     }
 
     public class ViewHolderOrder extends RecyclerView.ViewHolder {
@@ -50,71 +125,6 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         }
     }
 
-    private  List<Restaurant> restaurants;
-    private List<OrderFinished> orderFinisheds;
-    private OnOrderItemListener onOrderItemListener;
-
-    public OrderAdapter(List<OrderFinished> orderFinisheds, List<Restaurant> restaurants, OnOrderItemListener onOrderItemListener) {
-        this.orderFinisheds = orderFinisheds;
-        this.restaurants = restaurants;
-        this.onOrderItemListener = onOrderItemListener;
-    }
-
-    @NonNull
-    @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.row_order_finished, parent, false);
-        return new OrderAdapter.ViewHolderOrder(view);
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        OrderFinished orderFinished = orderFinisheds.get(position);
-        Restaurant restaurant = new Restaurant();
-        for (Restaurant restaurant1:restaurants){
-            if (orderFinished.getFoodBaskets().get(0).getFood().getResKey().equals(restaurant1.getResKey())){
-                restaurant = restaurant1;
-                break;
-            }
-        }
-        StorageReference storageReference = FirebaseStorage.getInstance().getReference();
-        ViewHolderOrder viewHolderOrder = (ViewHolderOrder) holder;
-        StorageReference profileRef = storageReference.child("restaurants/"+ restaurant.getLogo());
-        profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                Picasso.get().load(uri).into(viewHolderOrder.ivImage);
-            }
-        });
-
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-        reference.child("users").child(FirebaseAuth.getInstance().getUid()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                User user = snapshot.getValue(User.class);
-                viewHolderOrder.tvUserName.setText(user.getFirstname()+" "+user.getLastname());
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-        viewHolderOrder.tvName.setText(restaurant.getName());
-        viewHolderOrder.tvAddress.setText(restaurant.getAddress());
-        viewHolderOrder.tvID.setText(orderFinished.orderID);
-        viewHolderOrder.tvDate.setText(orderFinished.orderDate);
-        viewHolderOrder.tvSum.setText(orderFinished.orderSum);
-
-        viewHolderOrder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onOrderItemListener.onOrderItemListener(orderFinished);
-            }
-        });
-    }
 
     @Override
     public int getItemCount() {

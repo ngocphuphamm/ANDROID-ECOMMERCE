@@ -42,7 +42,7 @@ import java.util.concurrent.ExecutionException;
 
 public class OrderActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    private TextView tvTotal, tvName, tvAddress;
+    private TextView tvTotal, tvName, tvAddress,tvMobile;
     private RecyclerView rvFoods;
     private Basket basket;
     private FoodBasketAdapter adapter;
@@ -65,7 +65,7 @@ public class OrderActivity extends AppCompatActivity implements OnMapReadyCallba
 
         tvAddress = findViewById(R.id.tvAddress);
         tvName = findViewById(R.id.tvName);
-
+        tvMobile = findViewById(R.id.tvMobile);
         fAuth = FirebaseAuth.getInstance();
         fDatabase = FirebaseDatabase.getInstance();
 
@@ -87,7 +87,8 @@ public class OrderActivity extends AppCompatActivity implements OnMapReadyCallba
 
 
                         tvName.setText("Name: " + user.getFirstname() + " " + user.getLastname());
-                        tvAddress.setText("Address: " + user.getEmail());
+                        tvAddress.setText("Address: " + user.getAddress()+" ");
+                        tvMobile.setText("Mobile:" + user.getMobile()+" ");
 
                     }
                 })
