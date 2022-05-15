@@ -24,6 +24,8 @@ import com.example.a19dh1100266_phamngocphu.model.Cart;
 import com.example.a19dh1100266_phamngocphu.model.CartRepository;
 import com.example.a19dh1100266_phamngocphu.model.FoodBasket;
 
+import java.util.concurrent.ExecutionException;
+
 
 public class AddToBasketDialogFragment extends DialogFragment implements View.OnClickListener {
     TextView tvName, tvPrice, tvQuantity;
@@ -100,7 +102,13 @@ public class AddToBasketDialogFragment extends DialogFragment implements View.On
                     app.basket.addFood(food);
                 }
                 ((RestaurantDetailActivity) getActivity()).updateBasket();
-                cartRepository.insert(new Cart(food.getFoodKey(), food.getName(), food.getPrice(), food.getImage(),food.getRate(),food.getResKey(), food.getQuantity(), food.getSum()));
+                try {
+                    cartRepository.insert(new Cart(food.getFoodKey(), food.getName(), food.getPrice(), food.getImage(),food.getRate(),food.getResKey(), food.getQuantity(), food.getSum()));
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
                 getDialog().dismiss();
                 break;

@@ -3,7 +3,7 @@ package com.example.a19dh1100266_phamngocphu.model;
 import java.io.Serializable;
 
 public class User implements Serializable {
-    String firstname, lastname, email, address, mobile;
+    String firstname, lastname, email, address, mobile,userID;
     double latitude, longitude;
 
     public User(){
@@ -74,5 +74,12 @@ public class User implements Serializable {
 
     public void setMobile(String mobile) {
         this.mobile = mobile;
+    }
+    public String getUserID() {
+        return userID;
+    }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
     }
 }

@@ -28,13 +28,11 @@ import java.util.Comparator;
 
 
 public class TopFoodFragment extends Fragment implements FoodAdapter.OnFoodItemClickListener {
-
-    FirebaseDatabase fDatabase;
+    RecyclerView rvFood;
     FoodAdapter foodAdapter;
     ArrayList<Food> foods;
-    RecyclerView rvTopFood;
-    DatabaseReference reference;
-
+    FirebaseDatabase fDatabase;
+    DatabaseReference dFood;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -77,26 +75,17 @@ public class TopFoodFragment extends Fragment implements FoodAdapter.OnFoodItemC
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_top_food, container, false);
-    }
-
-    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        rvTopFood = view.findViewById(R.id.rvTopFood);
+        rvFood = view.findViewById(R.id.rvTopFood);
         foodAdapter = new FoodAdapter(foods, this);
-        rvTopFood.setAdapter(foodAdapter);
+        rvFood.setAdapter(foodAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        rvTopFood.setLayoutManager(layoutManager);
-        rvTopFood.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
-
+        rvFood.setLayoutManager(layoutManager);
+        rvFood.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
         fDatabase = FirebaseDatabase.getInstance();
-        reference = fDatabase.getReference();
-
-        Query qFood = reference.child("foods");
+        dFood = fDatabase.getReference();
+        Query qFood = dFood.child("foods").orderByChild("rate");
         qFood.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -105,7 +94,6 @@ public class TopFoodFragment extends Fragment implements FoodAdapter.OnFoodItemC
                     Food food = dataSnapshot.getValue(Food.class);
                     foods.add(food);
                 }
-                Collections.sort(foods, Comparator.comparing(Food::getRate).reversed());
                 foodAdapter.notifyDataSetChanged();
             }
 
@@ -115,6 +103,15 @@ public class TopFoodFragment extends Fragment implements FoodAdapter.OnFoodItemC
             }
         });
     }
+
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_top_food, container, false);
+    }
+
 
     @Override
     public void onFoodItemClick(Food food) {

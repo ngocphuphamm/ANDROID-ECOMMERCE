@@ -55,7 +55,6 @@ public class BasketDialogFragment extends DialogFragment implements  View.OnClic
         tvTotal = view.findViewById(R.id.tvTotal);
         tvTotal.setText(basket.getTotalPrice()+"");
         rvFoods = view.findViewById(R.id.rvFoods);
-        // dang fix
        adapter = new FoodBasketAdapter(new ArrayList<FoodBasket>(basket.foods.values()));
         rvFoods.setAdapter(adapter);
         rvFoods.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL,false));
